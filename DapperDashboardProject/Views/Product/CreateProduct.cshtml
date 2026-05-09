@@ -1,0 +1,26 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateProduct</title>
+</head>
+<body>
+    <select name="CategoryId" class="form-control">
+        <option value="">Kategori Seçiniz</option>
+
+        @foreach (var item in (List<SelectListItem>)ViewBag.Categories)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+
+    </select>
+
+
+</body>
+</html>
