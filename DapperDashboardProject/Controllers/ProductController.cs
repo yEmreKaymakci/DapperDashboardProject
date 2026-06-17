@@ -44,7 +44,7 @@ namespace DapperDashboardProject.Controllers
             return View(products);
 
         }
-
+    
         public async Task<IActionResult> TotalStockValue()
         {
             var totalStockValue = await _productService.GetTotalProductStockValueAsync();

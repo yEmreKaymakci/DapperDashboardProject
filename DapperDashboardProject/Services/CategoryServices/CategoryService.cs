@@ -56,6 +56,17 @@ namespace DapperDashboardProject.Services.CategoryServices
 
         }
 
+        public async Task<List<ResultCategoryStatisticDto>> GetCategoryStatisticAsync()
+        {
+            string procedureName = "sp_GetCategoryStatistic";
+
+            using var connection = _context.CreateConnection();
+
+            var values = await connection.QueryAsync<ResultCategoryStatisticDto>(procedureName, commandType: System.Data.CommandType.StoredProcedure);
+        
+            return values.ToList();
+        }
+
         public async Task UpdateCategoryAsync(UpdateCategoryDto dto)
         {
             string query = "UPDATE Categories SET CategoryName = @CategoryName, Description = @Description, IsActive = @IsActive WHERE @CategoryId";

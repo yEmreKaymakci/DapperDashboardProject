@@ -9,5 +9,6 @@ namespace DapperDashboardProject.Services.CategoryServices
         Task CreateCategoryAsync(CreateCategoryDto dto);
         Task UpdateCategoryAsync(UpdateCategoryDto dto);
         Task DeleteCategoryAsync(int id);
+        Task<List<ResultCategoryStatisticDto>> GetCategoryStatisticAsync();
     }
 }

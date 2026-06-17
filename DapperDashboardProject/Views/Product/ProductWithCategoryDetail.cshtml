@@ -1,0 +1,41 @@
+﻿@using DapperDashboardProject.Dtos.ProductDtos
+@model List<ResultProductWithCategoryDto>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ProductWithCategoryDetail</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Ürün Adı</th>
+                <th>Kategori</th>
+                <th>Fiyat</th>
+                <th>Stok</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductId</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.Price</td>
+                    <td>@item.Stock</td>
+                    <td>@item.IsActive</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

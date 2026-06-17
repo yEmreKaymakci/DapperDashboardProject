@@ -44,7 +44,7 @@ namespace DapperDashboardProject.Services.ProductServices
 
         public async Task<List<ResultProductWithCategoryDto>> GetProductWithCategoryDetailAsync(int minStock = 0)
         {
-            string producereName = "sp_GetProductsWithCategoryDetails";
+            string procedureName = "sp_GetProductsWithCategoryDetails";
 
             var parameters = new DynamicParameters();
 
@@ -53,7 +53,7 @@ namespace DapperDashboardProject.Services.ProductServices
             using var connection = _context.CreateConnection();
 
             var values = await connection.QueryAsync<ResultProductWithCategoryDto>
-                (producereName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                (procedureName, parameters, commandType: System.Data.CommandType.StoredProcedure);
 
             return values.ToList();
         }
