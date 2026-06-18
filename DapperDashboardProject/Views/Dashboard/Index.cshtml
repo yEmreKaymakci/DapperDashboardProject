@@ -1,0 +1,389 @@
+@model DapperDashboardProject.Dtos.DashboardDtos.DashboardViewModel
+@{
+    ViewData["Title"] = "Gelişmiş Dashboard";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<!-- Timer Alert -->
+<div class="alert mb-4" style="background: rgba(0, 210, 255, 0.1); border-left: 4px solid var(--accent-blue); color: var(--text-primary);">
+    <i class="fa-solid fa-stopwatch me-2 text-info"></i> Dapper İstekleri Toplam Yanıt Süresi: <strong>@ViewBag.ExecutionTime ms</strong>
+</div>
+
+<!-- Summary KPI Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card text-center p-4 h-100">
+            <div class="mb-3">
+                <i class="fa-solid fa-layer-group fa-3x" style="color: var(--accent-blue);"></i>
+            </div>
+            <h5 class="text-secondary mb-1">Toplam Kategori</h5>
+            <h2 class="fw-bold mb-0 count-up" data-val="@Model.Summary.TotalCategoryCount.ToString(System.Globalization.CultureInfo.InvariantCulture)">0</h2>
+            <small class="text-success"><i class="fa-solid fa-check-circle"></i> @Model.Summary.ActiveCategoryCount Aktif</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card text-center p-4 h-100">
+            <div class="mb-3">
+                <i class="fa-solid fa-box-open fa-3x" style="color: var(--accent-purple);"></i>
+            </div>
+            <h5 class="text-secondary mb-1">Toplam Ürün</h5>
+            <h2 class="fw-bold mb-0 count-up" data-val="@Model.Summary.TotalProductCount.ToString(System.Globalization.CultureInfo.InvariantCulture)">0</h2>
+            <small class="text-success"><i class="fa-solid fa-circle-check"></i> @Model.Summary.ActiveProductCount Aktif</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card text-center p-4 h-100">
+            <div class="mb-3">
+                <i class="fa-solid fa-cubes-stacked fa-3x" style="color: var(--accent-green);"></i>
+            </div>
+            <h5 class="text-secondary mb-1">Toplam Stok Adedi</h5>
+            <h2 class="fw-bold mb-0 count-up" data-val="@Model.Summary.TotalStockCount.ToString(System.Globalization.CultureInfo.InvariantCulture)">0</h2>
+            <small class="text-info"><i class="fa-solid fa-chart-line"></i> Envanterde</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card text-center p-4 h-100">
+            <div class="mb-3">
+                <i class="fa-solid fa-vault fa-3x" style="color: var(--accent-pink);"></i>
+            </div>
+            <h5 class="text-secondary mb-1">Toplam Stok Değeri</h5>
+            <h2 class="fw-bold mb-0">₺<span class="count-up" data-val="@Model.Summary.TotalStockValue.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-decimal="true">0</span></h2>
+            <small class="text-warning"><i class="fa-solid fa-tags"></i> Ort: ₺@Model.Summary.AveragePrice.ToString("N2")</small>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card text-center p-4 h-100">
+            <div class="mb-3">
+                <i class="fa-solid fa-ban fa-3x" style="color: var(--danger-red);"></i>
+            </div>
+            <h5 class="text-secondary mb-1">Pasif Ürünler</h5>
+            <h2 class="fw-bold mb-0 count-up" data-val="@Model.Summary.PassiveProductCount.ToString(System.Globalization.CultureInfo.InvariantCulture)">0</h2>
+            <small class="text-secondary"><i class="fa-solid fa-eye-slash"></i> Satışta Değil</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card text-center p-4 h-100">
+            <div class="mb-3">
+                <i class="fa-solid fa-arrow-trend-up fa-3x" style="color: var(--accent-yellow);"></i>
+            </div>
+            <h5 class="text-secondary mb-1">En Yüksek Fiyat</h5>
+            <h2 class="fw-bold mb-0">₺<span class="count-up" data-val="@Model.Summary.MaxProductPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-decimal="true">0</span></h2>
+            <small class="text-warning"><i class="fa-solid fa-star"></i> Zirve Fiyat</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card text-center p-4 h-100">
+            <div class="mb-3">
+                <i class="fa-solid fa-arrow-trend-down fa-3x" style="color: var(--accent-blue);"></i>
+            </div>
+            <h5 class="text-secondary mb-1">En Düşük Fiyat</h5>
+            <h2 class="fw-bold mb-0">₺<span class="count-up" data-val="@Model.Summary.MinProductPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-decimal="true">0</span></h2>
+            <small class="text-info"><i class="fa-solid fa-tag"></i> Taban Fiyat</small>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="glass-card text-center p-4 h-100">
+            <div class="mb-3">
+                <i class="fa-solid fa-layer-group fa-3x" style="color: var(--accent-green);"></i>
+            </div>
+            <h5 class="text-secondary mb-1">Aktif Kategori</h5>
+            <h2 class="fw-bold mb-0 count-up" data-val="@Model.Summary.ActiveCategoryCount.ToString(System.Globalization.CultureInfo.InvariantCulture)">0</h2>
+            <small class="text-success"><i class="fa-solid fa-check"></i> Yayında</small>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row g-4 mb-5">
+    <div class="col-lg-7">
+        <div class="glass-card h-100 p-4">
+            <h4 class="mb-4 text-gradient">Değere Göre En İyi 10 Kategori</h4>
+            <div style="height: 350px;">
+                <canvas id="topCategoriesChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="glass-card h-100 p-4">
+            <h4 class="mb-4 text-gradient-purple">Fiyat Aralığı Dağılımı</h4>
+            <div style="height: 350px; display:flex; justify-content:center;">
+                <canvas id="priceRangeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Tables Section -->
+<div class="row g-4">
+    <!-- Category Stock Values (Correlated Subquery) -->
+    <div class="col-lg-6 mb-4">
+        <div class="glass-card p-4 h-100">
+            <h5 class="mb-4"><i class="fa-solid fa-ranking-star me-2 text-warning"></i>Kategori Stok Değerleri <small class="text-secondary fs-6">(DENSE_RANK)</small></h5>
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-dark table-hover table-borderless align-middle" style="background: transparent;">
+                    <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 2;">
+                        <tr>
+                            <th>Sıra</th>
+                            <th>Kategori</th>
+                            <th>Stok</th>
+                            <th>Değer</th>
+                            <th style="width: 25%">% Pay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CategoryStockValues)
+                        {
+                            <tr>
+                                <td>
+                                    @if(item.StockValueRank == 1) { <i class="fa-solid fa-trophy text-warning"></i> }
+                                    else if(item.StockValueRank == 2) { <i class="fa-solid fa-medal text-secondary"></i> }
+                                    else if(item.StockValueRank == 3) { <i class="fa-solid fa-medal" style="color: #cd7f32;"></i> }
+                                    else { <span class="badge bg-secondary">@item.StockValueRank</span> }
+                                </td>
+                                <td class="fw-bold">@item.CategoryName</td>
+                                <td>@item.TotalStock</td>
+                                <td>₺@item.TotalStockValue.ToString("N0")</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress flex-grow-1" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                                            <div class="progress-bar" role="progressbar" style="width: @item.StockValuePercentage.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));" aria-valuenow="@item.StockValuePercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <small class="ms-2">@item.StockValuePercentage.ToString("0.0")%</small>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Low Stock Alerts -->
+    <div class="col-lg-6 mb-4">
+        <div class="glass-card p-4 h-100" style="border-top: 3px solid var(--danger-red);">
+            <h5 class="mb-4"><i class="fa-solid fa-triangle-exclamation me-2" style="color: var(--danger-red);"></i>Düşük Stok Uyarıları <small class="text-secondary fs-6">(Stok <= 20)</small></h5>
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-dark table-hover table-borderless align-middle" style="background: transparent;">
+                    <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 2;">
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Kategori</th>
+                            <th>Fiyat</th>
+                            <th>Stok</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.LowStockProducts)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td class="text-secondary">@item.CategoryName</td>
+                                <td>₺@item.Price.ToString("N0")</td>
+                                <td class="fw-bold @(item.Stock == 0 ? "text-danger" : "text-warning")">@item.Stock</td>
+                                <td>
+                                    @if(item.Stock == 0)
+                                    {
+                                        <span class="badge bg-danger">@item.StockLevel</span>
+                                    }
+                                    else if(item.Stock <= 10)
+                                    {
+                                        <span class="badge bg-warning text-dark">@item.StockLevel</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge" style="background-color: #fd7e14;">@item.StockLevel</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        @if(!Model.LowStockProducts.Any())
+                        {
+                            <tr><td colspan="5" class="text-center text-success py-4"><i class="fa-solid fa-check-circle fa-2x mb-2"></i><br/>Tüm ürünlerin stok seviyesi iyi durumda.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Most Expensive Products (ROW_NUMBER) -->
+<div class="glass-card p-4 mb-5">
+    <h5 class="mb-4"><i class="fa-solid fa-gem me-2 text-info"></i>Kategori Başına En Pahalı Ürün <small class="text-secondary fs-6">(ROW_NUMBER & PARTITION BY)</small></h5>
+    <div class="row g-3">
+        @foreach (var item in Model.MostExpensiveProducts)
+        {
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="card bg-transparent border border-secondary h-100" style="background-color: rgba(0,0,0,0.2) !important;">
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2">@item.CategoryName</span>
+                        <h6 class="card-title text-white text-truncate" title="@item.ProductName">@item.ProductName</h6>
+                        <h4 class="text-gradient mb-0 mt-3">₺@item.Price.ToString("N0")</h4>
+                        
+                        <div class="mt-3 pt-3 border-top border-secondary" style="font-size: 0.85rem;">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-secondary">Kategori Ort:</span>
+                                <span>₺@item.CategoryAveragePrice.ToString("N0")</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-secondary">Fark:</span>
+                                <span class="text-success">+@item.PriceVsAveragePercent.ToString("N0")%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // 1. Initialize Vanilla JS Counter for number animations (Removes CountUp.js dependency)
+            const counterElements = document.querySelectorAll('.count-up');
+            counterElements.forEach(el => {
+                const targetVal = parseFloat(el.getAttribute('data-val')) || 0;
+                const isDecimal = el.getAttribute('data-decimal') === 'true';
+                
+                let startTimestamp = null;
+                const duration = 2500; // ms
+                
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    // easeOutQuart
+                    const easeProgress = 1 - Math.pow(1 - progress, 4);
+                    const currentVal = targetVal * easeProgress;
+                    
+                    if (isDecimal) {
+                        el.innerText = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(currentVal);
+                    } else {
+                        el.innerText = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(Math.floor(currentVal));
+                    }
+                    
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        // Final setting to assure exact target
+                        if (isDecimal) {
+                            el.innerText = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(targetVal);
+                        } else {
+                            el.innerText = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(targetVal);
+                        }
+                    }
+                };
+                window.requestAnimationFrame(step);
+            });
+
+            // Set Chart.js defaults for dark theme
+            Chart.defaults.color = '#a0a0b8';
+            Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+
+            // 2. Prepare Data for Top Categories Chart
+            const topCategoriesData = @Html.Raw(Json.Serialize(Model.TopCategories));
+            
+            const categoryNames = topCategoriesData.map(c => c.categoryName);
+            const categoryValues = topCategoriesData.map(c => c.totalStockValue);
+            
+            // Create gradient for bars
+            const ctx1 = document.getElementById('topCategoriesChart').getContext('2d');
+            const gradient1 = ctx1.createLinearGradient(0, 0, 800, 0);
+            gradient1.addColorStop(0, 'rgba(0, 210, 255, 0.6)');
+            gradient1.addColorStop(1, 'rgba(157, 78, 221, 0.8)');
+
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: categoryNames,
+                    datasets: [{
+                        label: 'Toplam Stok Değeri (₺)',
+                        data: categoryValues,
+                        backgroundColor: gradient1,
+                        borderColor: 'rgba(0, 210, 255, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.x !== null) {
+                                        label += new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(context.parsed.x);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 3. Prepare Data for Price Range Chart
+            const priceRangeData = @Html.Raw(Json.Serialize(Model.PriceRangeDistribution));
+            
+            const rangeLabels = priceRangeData.map(p => p.priceRange);
+            const rangeCounts = priceRangeData.map(p => p.productCount);
+            
+            const ctx2 = document.getElementById('priceRangeChart').getContext('2d');
+            
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: rangeLabels,
+                    datasets: [{
+                        data: rangeCounts,
+                        backgroundColor: [
+                            '#00d2ff', // blue
+                            '#00f5d4', // green
+                            '#fee440', // yellow
+                            '#f15bb5', // pink
+                            '#9d4edd', // purple
+                            '#ff0054'  // red
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

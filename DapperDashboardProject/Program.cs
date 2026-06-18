@@ -1,6 +1,7 @@
 using DapperDashboardProject.Context;
 using DapperDashboardProject.Services.CategoryServices;
 using DapperDashboardProject.Services.ProductServices;
+using DapperDashboardProject.Services.DashboardServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<DapperContext>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 var app = builder.Build();
 
