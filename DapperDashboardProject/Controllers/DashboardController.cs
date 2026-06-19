@@ -14,16 +14,51 @@ namespace DapperDashboardProject.Controllers
             _dashboardService = dashboardService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index() => View();   // sadece shell döner
+
+        public async Task<IActionResult> GetSummary()
         {
-            var sw = Stopwatch.StartNew();
-            
-            var viewModel = await _dashboardService.GetFullDashboardAsync();
-            
-            sw.Stop();
-            ViewBag.ExecutionTime = sw.ElapsedMilliseconds;
-            
-            return View(viewModel);
+            var data = await _dashboardService.GetDashboardSummaryAsync();
+            return Json(data);
         }
+
+        public async Task<IActionResult> GetTopCategories()
+        {
+            var data = await _dashboardService.GetTopCategoriesAsync();
+            return Json(data);
+        }
+
+        public async Task<IActionResult> GetPriceDistribution()
+        {
+            var data = await _dashboardService.GetPriceRangeDistributionAsync();
+            return Json(data);
+        }
+
+        public async Task<IActionResult> GetCategoryStockValues()
+        {
+            var data = await _dashboardService.GetCategoryStockValuesAsync();
+            return Json(data);
+        }
+
+        public async Task<IActionResult> GetMostExpensiveCategory()
+        {
+            var data = await _dashboardService.GetMostExpensivePerCategoryAsync();
+            return Json(data);
+        }
+
+        public async Task<IActionResult> GetLowStockProducts()
+        {
+            var data = _dashboardService.GetLowStockProductsAsync();
+            return Json(data);
+        }
+
+        //public async Task<IActionResult> Index()
+        //{
+        //    var sw = Stopwatch.StartNew();
+        //    var viewModel = await _dashboardService.GetFullDashboardAsync();
+        //    sw.Stop();
+        //    ViewBag.ExecutionTime = sw.ElapsedMilliseconds;
+        //    return View(viewModel);
+        //}
     }
 }
