@@ -247,5 +247,50 @@ namespace DapperDashboardProject.Services.DashboardServices
                 LowStockProducts = await lowStockTask
             };
         }
+
+        public Task<List<ResultCategoryDistributionDto>> GetCategoryDistributionAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ResultStatusDistributionDto>> GetStatusDistributionAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ResultCategoryStatusSplitDto>> GetCategoryStatusSplitAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ResultAbcAnalysisDto>> GetAbcAnalysisAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ResultRiskMatrixDto>> GetRiskMatrixAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ResultCategoryHealthDto>> GetCategoryHealthAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ResultTopInventoryDto>> GetTopInventoryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ResultAnomalyDto>> GetAnomaliesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ResultProductTableDto>> GetProductsForTableAsync(string search, string category, string status)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
