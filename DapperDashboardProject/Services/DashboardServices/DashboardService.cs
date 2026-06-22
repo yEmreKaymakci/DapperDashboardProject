@@ -219,48 +219,74 @@ namespace DapperDashboardProject.Services.DashboardServices
             return result.ToList();
         }
 
-        public async Task<DashboardViewModel> GetFullDashboardAsync()
+        //public async Task<DashboardViewModel> GetFullDashboardAsync()
+        //{
+        //    var summaryTask = GetDashboardSummaryAsync();
+        //    var topCategoriesTask = GetTopCategoriesAsync();
+        //    var priceRangeTask = GetPriceRangeDistributionAsync();
+        //    var stockValuesTask = GetCategoryStockValuesAsync();
+        //    var mostExpensiveTask = GetMostExpensivePerCategoryAsync();
+        //    var lowStockTask = GetLowStockProductsAsync();
+
+        //    await Task.WhenAll(
+        //        summaryTask, 
+        //        topCategoriesTask, 
+        //        priceRangeTask, 
+        //        stockValuesTask, 
+        //        mostExpensiveTask, 
+        //        lowStockTask
+        //    );
+
+        //    return new DashboardViewModel
+        //    {
+        //        Summary = await summaryTask,
+        //        TopCategories = await topCategoriesTask,
+        //        PriceRangeDistribution = await priceRangeTask,
+        //        CategoryStockValues = await stockValuesTask,
+        //        MostExpensiveProducts = await mostExpensiveTask,
+        //        LowStockProducts = await lowStockTask
+        //    };
+        //}
+
+        public async Task<List<ResultCategoryDistributionDto>> GetCategoryDistributionAsync()
         {
-            var summaryTask = GetDashboardSummaryAsync();
-            var topCategoriesTask = GetTopCategoriesAsync();
-            var priceRangeTask = GetPriceRangeDistributionAsync();
-            var stockValuesTask = GetCategoryStockValuesAsync();
-            var mostExpensiveTask = GetMostExpensivePerCategoryAsync();
-            var lowStockTask = GetLowStockProductsAsync();
-
-            await Task.WhenAll(
-                summaryTask, 
-                topCategoriesTask, 
-                priceRangeTask, 
-                stockValuesTask, 
-                mostExpensiveTask, 
-                lowStockTask
-            );
-
-            return new DashboardViewModel
-            {
-                Summary = await summaryTask,
-                TopCategories = await topCategoriesTask,
-                PriceRangeDistribution = await priceRangeTask,
-                CategoryStockValues = await stockValuesTask,
-                MostExpensiveProducts = await mostExpensiveTask,
-                LowStockProducts = await lowStockTask
-            };
+            string query = @"
+                SELECT c.CategoryName, COUNT(p.ProductId) as Count
+                FROM Categories c 
+                LEFT JOIN Products p ON c.CategoryId = p.CategoryId
+                GROUP BY c.CategoryName";
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryAsync<ResultCategoryDistributionDto>(query);
+            return result.ToList();
         }
 
-        public Task<List<ResultCategoryDistributionDto>> GetCategoryDistributionAsync()
+        public async Task<List<ResultStatusDistributionDto>> GetStatusDistributionAsync()
         {
-            throw new NotImplementedException();
+            string query = @"
+                SELECT
+                    CASE WHEN IsActive = 1 THEN 'Aktif' ELSE 'Pasif' END as Status,
+                    COUNT(*) as Count
+                FROM Products
+                GROUP BY IsActive";
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryAsync<ResultStatusDistributionDto>(query);
+            return result.ToList();
+
         }
 
-        public Task<List<ResultStatusDistributionDto>> GetStatusDistributionAsync()
+        public async Task<List<ResultCategoryStatusSplitDto>> GetCategoryStatusSplitAsync()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<ResultCategoryStatusSplitDto>> GetCategoryStatusSplitAsync()
-        {
-            throw new NotImplementedException();
+            string query = @"
+                SELECT
+                    c.CategoryName,
+                    SUM(CASE WHEN p.IsActive = 1 THEN 1 ELSE 0 END) as ActiveCount,
+                    SUM(CASE WHEN p.IsActive = 0 THEN 0 ELSE 1 END) as PassiveCount
+                FROM Categories c
+                LEFT JOIN Products p ON c.CategoryId = p.CategoryId
+                GROUP BY c.CategoryName";
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryAsync<ResultCategoryStatusSplitDto>(query);
+            return result.ToList();
         }
 
         public Task<List<ResultAbcAnalysisDto>> GetAbcAnalysisAsync()
