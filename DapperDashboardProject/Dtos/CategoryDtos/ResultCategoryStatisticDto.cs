@@ -1,4 +1,4 @@
-﻿namespace DapperDashboardProject.Dtos.CategoryDtos
+namespace DapperDashboardProject.Dtos.CategoryDtos
 {
     public class ResultCategoryStatisticDto
     {
@@ -6,7 +6,7 @@
         public int TotalProductCount { get; set; }
         public decimal AvaragePrice { get; set; }
         public decimal MaxPrice { get; set; }
-        public string CategoryName { get; set; } = string.Empty;
+        public string? CategoryName { get; set; } = string.Empty;
         public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
     }

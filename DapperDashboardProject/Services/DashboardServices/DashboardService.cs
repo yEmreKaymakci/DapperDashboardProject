@@ -289,34 +289,134 @@ namespace DapperDashboardProject.Services.DashboardServices
             return result.ToList();
         }
 
-        public Task<List<ResultAbcAnalysisDto>> GetAbcAnalysisAsync()
+        public async Task<List<ResultAbcAnalysisDto>> GetAbcAnalysisAsync()
         {
-            throw new NotImplementedException();
+            string query = @"
+                WITH ProductValue AS (
+                    SELECT ProductId,(Price * Stock) as Value FROM Products
+                ), TotalVal AS (
+                    SELECT SUM(Value) as Total FROM ProductValue
+                ), Ranked AS(
+                    SELECT
+                        Value,
+                        SUM(Value) OVER(ORDER BY Value DESC) / NULLIF((SELECT TOTAL FROM TotalVal), 0) as CumulativePct
+                    FROM ProductValue
+                )
+                SELECT 
+                    CASE
+                        WHEN CumulativePct <= 0.70 THEN 'Class A (High Value)'
+                        WHEN CumulativePct <= 0.90 THEN 'Class B'
+                        ELSE 'Class C'
+                    END as ClassName,
+                    COUNT(*) as ProductCount,
+                    SUM(Value) as TotalValue
+                FROM Ranked
+                GROUP BY
+                    CASE
+                        WHEN CumulativePct <= 0.70 THEN 'Grup A (High Value)'
+                        WHEN CumulativePct <= 0.90 THEN 'Grup B'
+                        ELSE 'Class C'
+                    END";
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryAsync<ResultAbcAnalysisDto>(query);
+            return result.ToList();
         }
 
-        public Task<List<ResultRiskMatrixDto>> GetRiskMatrixAsync()
+        public async Task<List<ResultRiskMatrixDto>> GetRiskMatrixAsync()
         {
-            throw new NotImplementedException();
+            string query = @"
+                SELECT
+                    CASE 
+                        WHEN Stock > 100 THEN 'Overstocked'
+                        WHEN Stock <= 20 THEN 'Risky'
+                        ELSE 'Healty'
+                    END as RiskLevel,
+                    COUNT(*) as Count
+                FROM Products
+                GROUP BY
+                    CASE
+                        WHEN Stock > 100 THEN 'Overstocked'
+                        WHEN Stock <= 20 THEN 'Risky'
+                        ELSE 'Healty'
+                    END";
+            using var connections = _context.CreateConnection();
+            var result = await connections.QueryAsync<ResultRiskMatrixDto>(query);
+            return result.ToList();
         }
 
-        public Task<List<ResultCategoryHealthDto>> GetCategoryHealthAsync()
+        public async Task<List<ResultCategoryHealthDto>> GetCategoryHealthAsync()
         {
-            throw new NotImplementedException();
+            string query = @"
+                SELECT 
+                    c.CategoryName,
+                    CAST((SUM(CASE WHEN p.IsActive = 1 AND p.Stock > 0 THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(p.ProductId), 1) AS INT) as Score,
+                    CASE
+                        WHEN (SUM(CASE WHEN p.IsActive = 1 AND p.Stock > 0 THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(p.ProductId), 1) >= 80 THEN '#3fb950'
+                        WHEN (SUM(CASE WHEN p.IsActive = 1 AND p.Stock > 0 THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(p.ProductId), 1) >= 50 THEN '#d29922'
+                        ELSE '#f85149'
+                    END as Color
+                FROM Categories c
+                LEFT JOIN Products p  ON c.CategoryId = p.CategoryId
+                GROUP BY c.CategoryName";
+            using var connections = _context.CreateConnection();
+            var result = await connections.QueryAsync<ResultCategoryHealthDto>(query);
+            return result.ToList();
         }
 
-        public Task<List<ResultTopInventoryDto>> GetTopInventoryAsync()
+        public async Task<List<ResultTopInventoryDto>> GetTopInventoryAsync()
         {
-            throw new NotImplementedException();
+            string query = @"
+                SELECT TOP 10
+                    ProductName as NAME,
+                    (Price * Stock) as Value
+                FROM Products
+                 ORDER BY (Price * Stock) DESC";
+            using var connections = _context.CreateConnection();
+            var result = await connections.QueryAsync<ResultTopInventoryDto>(query);
+            return result.ToList();
         }
 
-        public Task<List<ResultAnomalyDto>> GetAnomaliesAsync()
+        public async Task<List<ResultAnomalyDto>> GetAnomaliesAsync()
         {
-            throw new NotImplementedException();
+            string query = @"
+                SELECT TOP 5
+                    ProductId as Id,
+                    'Stoksuz ama Aktif' as Msg,
+                    ProductName as Product,
+                    'Hemen Kapatılmalı' as Impact
+                FROM Products
+                WHERE Stock = 0 AND IsActive = 1";
+            using var connections = _context.CreateConnection();
+            var result = await connections.QueryAsync<ResultAnomalyDto>(query);
+            return result.ToList();
         }
 
-        public Task<List<ResultProductTableDto>> GetProductsForTableAsync(string search, string category, string status)
+        public async Task<List<ResultProductTableDto>> GetProductsForTableAsync(string search, string category, string status)
         {
-            throw new NotImplementedException();
+            string query = @"
+                SELECT
+                    p.ProductsId,
+                    p.ProductsName,
+                    c.CategoryName,
+                    p.Price,
+                    p.Stock,
+                    p.IsActive, 
+                    CASE
+                        WHEN p.Stock 0 THEN 'oos'
+                        WHEN p.Stock <= 20 THEN 'critical'
+                        ELSE 'normal'
+                    END as RiskStatus
+                FROM Products p
+                INNER JOIN Categories c ON p.CategoryId = c.CategoryId
+                WHERE (@Search IS NULL OR p.ProductName LIKE '%' + @Search + ,'%')
+                ORDER BY p.ProductId DESC";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@Search", string.IsNullOrEmpty(search) ? null : search);
+
+            using var connections = _context.CreateConnection();
+            var result = await connections.QueryAsync<ResultProductTableDto>(query, parameters);
+            return result.ToList();
         }
     }
 }

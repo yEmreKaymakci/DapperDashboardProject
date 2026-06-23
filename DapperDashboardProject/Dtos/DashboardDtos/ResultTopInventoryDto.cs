@@ -1,9 +1,9 @@
-ï»¿namespace DapperDashboardProject.Dtos.DashboardDtos
+namespace DapperDashboardProject.Dtos.DashboardDtos
 {
     public class ResultTopInventoryDto
     {
-        public string ProductName { get; set; }
+        public string? ProductName { get; set; }
         public decimal InventoryValue { get; set; } // Fiyat * Stok
-        public string Change { get; set; } // HaftalÄ±k deÄŸiÅŸim oranÄ± (Ã–rn: "+5%")
+        public string? Change { get; set; } // Haftalýk deðiþim oraný (Örn: "+5%")
     }
 }

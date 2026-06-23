@@ -16,6 +16,7 @@ namespace DapperDashboardProject.Services.DashboardServices
 
 
         Task<List<ResultPriceRangeDistributionDto>> GetPriceRangeDistributionAsync();
+
         Task<List<ResultCategoryStockValueDto>> GetCategoryStockValuesAsync();
         Task<List<ResultMostExpensiveProductDto>> GetMostExpensivePerCategoryAsync(int topN = 10);
         Task<List<ResultLowStockProductDto>> GetLowStockProductsAsync(int threshold = 20);

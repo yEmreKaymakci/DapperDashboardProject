@@ -1,9 +1,9 @@
-﻿namespace DapperDashboardProject.Dtos.DashboardDtos
+namespace DapperDashboardProject.Dtos.DashboardDtos
 {
     public class ResultCategoryHealthDto
     {
-        public string CategoryName { get; set; }
-        public int Score { get; set; } // Performans yüzdesi
-        public string Color { get; set; } // Grafik rengi 
+        public string? CategoryName { get; set; }
+        public int Score { get; set; } // Performans y�zdesi
+        public string? Color { get; set; } // Grafik rengi 
     }
 }
