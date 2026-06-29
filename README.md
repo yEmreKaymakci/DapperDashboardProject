@@ -1,11 +1,11 @@
 # 📊 Analitik Merkezi — Ürün Analitiği ve Envanter Yönetimi Dashboard'u
 
 [![.NET Version](https://img.shields.io/badge/.NET-9.0-blueviolet?style=for-the-badge&logo=dotnet)](https://dotnet.microsoft.com/)
-[![Database](https://img.shields.io/badge/PostgreSQL-16-blue?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+![MicrosoftSQLServer](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white)
 [![ORM](https://img.shields.io/badge/Dapper-ORM-red?style=for-the-badge&logo=nuget)](https://github.com/DapperLib/Dapper)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-**Analitik Merkezi**, yaklaşık **1.025.000 veri kaydını (1+ Milyon satır)** gerçek zamanlı ve yüksek performansla işleyen, kurumsal düzeyde bir Ürün Analitiği ve Envanter Yönetimi platformudur. ASP.NET Core 9 MVC mimarisi üzerine inşa edilmiş olup, veri erişiminde Dapper ORM ve PostgreSQL veri tabanı entegrasyonuyla milisaniyeler seviyesinde sorgu yanıt süreleri sunar.
+**Analitik Merkezi**, yaklaşık **1.025.000 veri kaydını (1+ Milyon satır)** gerçek zamanlı ve yüksek performansla işleyen, kurumsal düzeyde bir Ürün Analitiği ve Envanter Yönetimi platformudur. ASP.NET Core 9 MVC mimarisi üzerine inşa edilmiş olup, veri erişiminde Dapper ORM ve Microsoft SQL Server (MSSQL) veri tabanı entegrasyonuyla milisaniyeler seviyesinde sorgu yanıt süreleri sunar.
 
 ---
 
@@ -24,7 +24,7 @@
 ### Backend & Data Access
 - **C# .NET 9.0 MVC:** Hızlı, modern ve güvenli sunucu tarafı uygulama mimarisi.
 - **Dapper ORM:** Düşük bellek tüketimi ve maksimum SQL execution hızı için Micro-ORM çözümü.
-- **PostgreSQL:** Büyük veri kümelerini saklamak ve JSON/Window fonksiyonlarını çalıştırmak için güçlü RDBMS.
+- **Microsoft SQL Server (MSSQL):** Büyük veri kümelerini saklamak, T-SQL yeteneklerinden yararlanmak ve JSON/Window fonksiyonlarını çalıştırmak için güçlü RDBMS.
 - **RequestTimingMiddleware:** Tüm HTTP isteklerinin veritabanı ve sunucu işlem sürelerini takip eden özel middleware.
 
 ### Frontend
@@ -124,8 +124,8 @@ Stok parametreleri dışında kalan ürünleri otomatik olarak tespit eden, risk
 
 Proje, 1 milyon satır üzerinde veri araması, sayfalama ve gruplama işlemlerini **50ms**'nin altında gerçekleştirmektedir. Bunun için uygulanan veri tabanı optimizasyonları:
 
-1. **B-Tree İndeksleme:** Sık sorgulanan `Price`, `Stock`, `CategoryId` ve `Status` kolonları üzerinde çoklu indeksler oluşturulmuştur.
-2. **OFFSET / FETCH Kısıtlamaları:** Veri çekme süreçlerinde tüm tablolar sunucu taraflı (server-side) pagination mimarisine geçirilerek bellek şişmeleri önlenmiştir.
+1. **Clustered / Non-Clustered İndeksleme:** Sık sorgulanan `Price`, `Stock`, `CategoryId` ve `Status` kolonları üzerinde SQL Server B-Tree mimarisine uygun çoklu indeksler (Non-Clustered Indexes) oluşturulmuştur.
+2. **OFFSET / FETCH Kısıtlamaları:** Veri çekme süreçlerinde tüm tablolar T-SQL `OFFSET ROWS FETCH NEXT` yapısı kullanılarak sunucu taraflı (server-side) pagination mimarisine geçirilmiş ve bellek şişmeleri önlenmiştir.
 3. **Milisaniyelik Telemetry Takibi:** Uygulama başlığında yer alan `Server: Xms | UI: Yms` göstergesi, `RequestTimingMiddleware` ve tarayıcı performans API'si yardımıyla her AJAX isteğinde gerçek zamanlı ölçüm yapar.
 
 ---
@@ -134,7 +134,7 @@ Proje, 1 milyon satır üzerinde veri araması, sayfalama ve gruplama işlemleri
 
 ### Gereksinimler
 - .NET 9.0 SDK
-- PostgreSQL 15 veya üzeri
+- Microsoft SQL Server 2019 veya üzeri (LocalDB, Express veya Enterprise)
 - Herhangi bir modern tarayıcı (Chrome, Edge, Firefox vb.)
 
 ### Adımlar
