@@ -12,9 +12,12 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<DapperDashboardProject.Middlewares.RequestTimingMiddleware>();
 app.UseMiddleware<DapperDashboardProject.Middlewares.SimpleExceptionMiddleware>();
 if (!app.Environment.IsDevelopment())
 {

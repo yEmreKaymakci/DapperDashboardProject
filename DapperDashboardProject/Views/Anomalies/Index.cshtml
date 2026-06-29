@@ -1,0 +1,93 @@
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Anomaliler";
+    ViewData["Subtitle"] = "Stok ve fiyat anomali tespiti";
+}
+
+<div class="px-6 mt-8 space-y-8 max-w-[1600px] mx-auto">
+    <!-- Alert Banner -->
+    <div class="glass-card p-6 rounded-xl border-l-4 border-l-error bg-error/5">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-error text-3xl">emergency</span>
+            <div>
+                <h3 class="text-headline-sm font-bold text-error">Anomali Algılama Sistemi</h3>
+                <p class="text-body-sm text-on-surface-variant">Stoksuz ama aktif durumdaki ürünler ve fiyat sapmaları otomatik olarak tespit edilir.</p>
+            </div>
+            <div class="ml-auto text-right">
+                <div class="text-2xl font-black text-error" id="anomaly-count">-</div>
+                <div class="text-[10px] text-on-surface-variant uppercase">Aktif Anomali</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Stock Anomalies -->
+        <div class="glass-card rounded-xl overflow-hidden">
+            <div class="p-4 border-b border-outline-variant bg-error/5">
+                <h4 class="text-label-md font-bold text-error flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">error</span>
+                    Stok Anomalileri — Stoksuz & Aktif Ürünler
+                </h4>
+            </div>
+            <div class="p-4 space-y-3" id="stock-anomalies-list">
+                <div class="loading-skeleton h-20 w-full rounded-lg"></div>
+                <div class="loading-skeleton h-20 w-full rounded-lg"></div>
+            </div>
+        </div>
+
+        <!-- Risk Matrix -->
+        <div class="glass-card rounded-xl overflow-hidden">
+            <div class="p-4 border-b border-outline-variant">
+                <h4 class="text-label-md font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm text-warning">shield</span>
+                    Stok Risk Dağılımı
+                </h4>
+            </div>
+            <div class="p-6">
+                <div class="chart-container" id="anomaly-risk-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABC Analysis -->
+    <div class="glass-card rounded-xl overflow-hidden">
+        <div class="p-4 border-b border-outline-variant">
+            <h4 class="text-headline-sm font-bold text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary">assessment</span>
+                ABC Stok Değer Analizi
+            </h4>
+            <p class="text-body-sm text-on-surface-variant mt-1">Pareto prensibine göre ürün sınıflandırması</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 divide-x divide-outline-variant" id="abc-cards">
+            <div class="loading-skeleton h-32 m-4 rounded-xl"></div>
+            <div class="loading-skeleton h-32 m-4 rounded-xl"></div>
+            <div class="loading-skeleton h-32 m-4 rounded-xl"></div>
+        </div>
+    </div>
+
+    <!-- Görev 4: Category Health — İlk 10 satır + "Daha Fazla Göster" -->
+    <div class="glass-card rounded-xl p-6">
+        <h3 class="text-headline-sm font-bold text-on-surface mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">health_and_safety</span>
+            Kategori Sağlık Durumu
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6" id="anomaly-health-bars">
+            <div class="loading-skeleton h-8 w-full rounded"></div>
+            <div class="loading-skeleton h-8 w-full rounded"></div>
+            <div class="loading-skeleton h-8 w-full rounded"></div>
+        </div>
+        <!-- Görev 4: Show more button (hidden initially, shown via JS if data > 10) -->
+        <button class="show-more-btn" id="anomaly-health-more-btn" style="display: none;" onclick="showAllAnomalyHealth()">
+            <span class="material-symbols-outlined" style="font-size:18px">expand_more</span>
+            <span id="anomaly-health-more-text">Tüm Kategorileri Göster</span>
+        </button>
+    </div>
+</div>
+
+@section Styles {
+    <link href="~/css/anomalies.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/js/anomalies.js"></script>
+}

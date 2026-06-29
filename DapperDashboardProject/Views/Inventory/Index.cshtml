@@ -1,0 +1,94 @@
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Envanter Listesi";
+    ViewData["Subtitle"] = "Ürün stok detayları ve envanter değerleri";
+}
+
+<div class="px-6 mt-8 space-y-8 max-w-[1600px] mx-auto">
+    <!-- Top Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-xl border-l-4 border-l-primary">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-primary">inventory_2</span>
+                <span class="text-label-md font-bold text-on-surface-variant uppercase">Toplam Envanter Değeri</span>
+            </div>
+            <div class="text-2xl font-black text-on-surface" id="inv-total-value">Yükleniyor...</div>
+        </div>
+        <div class="glass-card p-6 rounded-xl border-l-4 border-l-secondary">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-secondary">trending_up</span>
+                <span class="text-label-md font-bold text-on-surface-variant uppercase">En Yüksek Birim Fiyat</span>
+            </div>
+            <div class="text-2xl font-black text-on-surface" id="inv-max-price">Yükleniyor...</div>
+        </div>
+        <div class="glass-card p-6 rounded-xl border-l-4 border-l-error">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-error">warning</span>
+                <span class="text-label-md font-bold text-on-surface-variant uppercase">Kritik Stok Ürünleri</span>
+            </div>
+            <div class="text-2xl font-black text-on-surface" id="inv-low-stock-count">Yükleniyor...</div>
+        </div>
+    </div>
+
+    <!-- Görev 5: Low Stock Alert Table — Server-side Paginated -->
+    <div class="glass-card rounded-xl overflow-hidden">
+        <div class="p-4 border-b border-outline-variant flex items-center justify-between">
+            <h3 class="text-headline-sm font-bold text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-error">notification_important</span>
+                Kritik Stok Raporu
+            </h3>
+            <span class="text-label-md text-on-surface-variant">Stok ≤ 20</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant">
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Ürün Adı</th>
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Kategori</th>
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Stok</th>
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Fiyat</th>
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Stok Değeri</th>
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Seviye</th>
+                    </tr>
+                </thead>
+                <tbody id="low-stock-tbody">
+                    <tr><td colspan="6"><div class="loading-skeleton h-10 w-full m-4"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Görev 5: Pagination footer -->
+        <div id="low-stock-pagination"></div>
+    </div>
+
+    <!-- Top Inventory Value Table -->
+    <div class="glass-card rounded-xl overflow-hidden">
+        <div class="p-4 border-b border-outline-variant">
+            <h3 class="text-headline-sm font-bold text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">leaderboard</span>
+                En Yüksek Envanter Değerine Sahip Ürünler
+            </h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant">
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">#</th>
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Ürün Adı</th>
+                        <th class="p-4 text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Envanter Değeri</th>
+                    </tr>
+                </thead>
+                <tbody id="top-inv-tbody">
+                    <tr><td colspan="3"><div class="loading-skeleton h-10 w-full m-4"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link href="~/css/inventory.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/js/inventory.js"></script>
+}

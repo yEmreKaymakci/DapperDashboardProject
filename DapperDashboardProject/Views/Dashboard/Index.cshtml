@@ -20,6 +20,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
+    <link href="~/css/shared.css" rel="stylesheet" />
     <link href="~/css/dashboard.css" rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
@@ -56,7 +60,7 @@
         }
     </script>
 </head>
-<body class="overflow-x-hidden">
+<body class="overflow-x-hidden"> 
     <!-- Side Navigation Shell -->
     <aside class="hidden lg:flex flex-col fixed left-0 top-0 h-full w-[260px] py-6 px-4 z-40 bg-surface-container border-r border-outline-variant">
         <div class="flex items-center gap-3 px-2 mb-10">
@@ -67,21 +71,21 @@
             </div>
         </div>
         <nav class="flex-1 space-y-1">
-            <a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-bold transition-transform duration-200 translate-x-1" href="#">
+            <a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl font-bold transition-transform duration-200 translate-x-1" href="/Dashboard/Index">
                 <span class="material-symbols-outlined">dashboard</span>
                 <span class="text-label-md">Genel Bakış</span>
             </a>
-            <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-xl" href="#">
+            <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-xl" href="/Inventory/Index">
                 <span class="material-symbols-outlined">inventory_2</span>
-                <span class="text-label-md">Envanter</span>
+                <span class="text-label-md">Envanter Listesi</span>
             </a>
-            <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-xl" href="#">
-                <span class="material-symbols-outlined">trending_up</span>
-                <span class="text-label-md">Satışlar</span>
+            <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-xl" href="/Statistics/Index">
+                <span class="material-symbols-outlined">analytics</span>
+                <span class="text-label-md">İleri İstatistikler</span>
             </a>
-            <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-xl" href="#">
+            <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-xl" href="/Anomalies/Index">
                 <span class="material-symbols-outlined">warning</span>
-                <span class="text-label-md">Anamoliler</span>
+                <span class="text-label-md">Anomaliler</span>
             </a>
             @* <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-xl" href="#">
                 <span class="material-symbols-outlined">settings</span>
@@ -270,17 +274,19 @@
             <!-- Chart Bento Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 <!-- Row 1 -->
-                <div class="glass-card p-6 rounded-xl">
+                <div class="glass-card p-6 rounded-xl expandable-card" onclick="openDetailModal('catDistribution')">
                     <h3 class="text-label-md font-bold text-on-surface-variant uppercase mb-4">Ana Kategori Dağılımı</h3>
                     <div class="chart-container" id="chart-main-cat"></div>
+                    <div class="expand-hint"><span class="material-symbols-outlined" style="font-size:14px">open_in_full</span> Detay için tıklayın</div>
                 </div>
                 <div class="glass-card p-6 rounded-xl">
                     <h3 class="text-label-md font-bold text-on-surface-variant uppercase mb-4">Aktif / Pasif Durumu</h3>
                     <div class="chart-container" id="chart-status-donut"></div>
                 </div>
-                <div class="glass-card p-6 rounded-xl">
+                <div class="glass-card p-6 rounded-xl expandable-card" onclick="openDetailModal('catStatusSplit')">
                     <h3 class="text-label-md font-bold text-on-surface-variant uppercase mb-4">Kategori Durum Karşılaştırması</h3>
                     <div class="chart-container" id="chart-cat-split"></div>
+                    <div class="expand-hint"><span class="material-symbols-outlined" style="font-size:14px">open_in_full</span> Detay için tıklayın</div>
                 </div>
                 <!-- Row 2 -->
                 <div class="glass-card p-6 rounded-xl">
@@ -296,7 +302,7 @@
                     <div class="chart-container" id="chart-risk"></div>
                 </div>
                 <!-- Row 3 Special Widgets -->
-                <div class="glass-card p-6 rounded-xl xl:col-span-2">
+                <div class="glass-card p-6 rounded-xl xl:col-span-2" id="category-health-section">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-label-md font-bold text-on-surface-variant uppercase">Kategori Sağlık Performansı</h3>
                         <div class="flex gap-2">
@@ -304,13 +310,21 @@
                             <span class="w-3 h-3 rounded-full bg-warning"></span> <span class="text-[10px]">Uyarı</span>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6" id="category-health-bars">
-                        <!-- Progress bars injected by JS -->
+                    <div class="accordion-fade collapsed">
+                        <div class="accordion-wrapper collapsed" id="health-accordion-wrapper">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6" id="category-health-bars">
+                                <!-- Progress bars injected by JS -->
+                            </div>
+                        </div>
                     </div>
+                    <button class="accordion-toggle-btn" id="health-toggle-btn" onclick="toggleCategoryHealth()">
+                        <span class="material-symbols-outlined">expand_more</span> Daha Fazla Göster
+                    </button>
                 </div>
-                <div class="glass-card p-6 rounded-xl">
+                <div class="glass-card p-6 rounded-xl expandable-card" onclick="openDetailModal('radar')">
                     <h3 class="text-label-md font-bold text-on-surface-variant uppercase mb-4">Kategori Karşılaştırma Endeksi</h3>
                     <div class="chart-container" id="chart-radar"></div>
+                    <div class="expand-hint"><span class="material-symbols-outlined" style="font-size:14px">open_in_full</span> Detay için tıklayın</div>
                 </div>
             </div>
             <!-- Widgets Row -->
@@ -337,9 +351,10 @@
                     </div>
                 </div>
                 <!-- Price Percentile / Stats -->
-                <div class="lg:col-span-2 glass-card rounded-xl">
-                    <div class="p-4 border-b border-outline-variant">
+                <div class="lg:col-span-2 glass-card rounded-xl expandable-card" onclick="openDetailModal('priceStats')">
+                    <div class="p-4 border-b border-outline-variant flex items-center justify-between">
                         <h4 class="text-label-md font-bold">Fiyat İstatistikleri & Dağılımı</h4>
+                        <div class="expand-hint" style="margin-top:0"><span class="material-symbols-outlined" style="font-size:14px">open_in_full</span> Detay</div>
                     </div>
                     <div class="p-6">
                         <div class="h-32 mb-8" id="chart-percentile"></div>
@@ -393,15 +408,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="p-4 border-t border-outline-variant flex items-center justify-between bg-surface-container-low">
-                    <span class="text-body-sm text-on-surface-variant">Toplam 1,240 kayıttan 1-10 arası gösteriliyor</span>
-                    <div class="flex gap-2">
-                        <button class="p-2 border border-outline-variant rounded hover:bg-surface-container-highest disabled:opacity-30"><span class="material-symbols-outlined">chevron_left</span></button>
-                        <button class="px-3 py-1 bg-primary text-surface rounded text-label-md font-bold">1</button>
-                        <button class="px-3 py-1 border border-outline-variant rounded text-label-md font-bold hover:bg-surface-container-highest">2</button>
-                        <button class="px-3 py-1 border border-outline-variant rounded text-label-md font-bold hover:bg-surface-container-highest">3</button>
-                        <button class="p-2 border border-outline-variant rounded hover:bg-surface-container-highest"><span class="material-symbols-outlined">chevron_right</span></button>
-                    </div>
+                <div class="p-4 border-t border-outline-variant flex items-center justify-between bg-surface-container-low" id="pagination-footer">
+                    <span class="text-body-sm text-on-surface-variant">Yükleniyor...</span>
+                    <div class="flex gap-2"></div>
                 </div>
             </div>
         </div>
@@ -467,7 +476,22 @@
             </div>
         </div>
     </div>
+    <!-- Görev 2: Detail Modal -->
+    <div class="detail-modal-overlay" id="detail-modal-overlay" onclick="if(event.target===this) closeDetailModal()">
+        <div class="detail-modal-panel">
+            <div class="detail-modal-header">
+                <h3 id="detail-modal-title"><span class="material-symbols-outlined text-primary">analytics</span> Detay Görünüm</h3>
+                <button class="detail-modal-close" onclick="closeDetailModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="detail-modal-body" id="detail-modal-body">
+                <!-- Chart rendered dynamically -->
+            </div>
+        </div>
+    </div>
     <!-- Initialization & Interactivity Script -->
+    <script src="~/js/shared.js"></script>
     <script src="~/js/dashboard.js"></script>
 </body>
 </html>

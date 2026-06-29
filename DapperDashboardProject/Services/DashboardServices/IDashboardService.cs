@@ -8,12 +8,10 @@ namespace DapperDashboardProject.Services.DashboardServices
         Task<ResultDashboardSummaryDto> GetDashboardSummaryAsync();
         Task<List<ResultTopCategoryDto>> GetTopCategoriesAsync(int topCount = 10);
 
-        Task<List<ResultCategoryDistributionDto>> GetCategoryDistributionAsync();
+        // Görev 2: topN parametresi ile özet/detay görünüm desteği
+        Task<List<ResultCategoryDistributionDto>> GetCategoryDistributionAsync(int? topN = null);
         Task<List<ResultStatusDistributionDto>> GetStatusDistributionAsync();
-        Task<List<ResultCategoryStatusSplitDto>> GetCategoryStatusSplitAsync();
-
-
-
+        Task<List<ResultCategoryStatusSplitDto>> GetCategoryStatusSplitAsync(int? topN = null);
 
         Task<List<ResultPriceRangeDistributionDto>> GetPriceRangeDistributionAsync();
 
@@ -21,6 +19,8 @@ namespace DapperDashboardProject.Services.DashboardServices
         Task<List<ResultMostExpensiveProductDto>> GetMostExpensivePerCategoryAsync(int topN = 10);
         Task<List<ResultLowStockProductDto>> GetLowStockProductsAsync(int threshold = 20);
 
+        // Görev 5: Sayfalı düşük stok sorgusu
+        Task<PagedResult<ResultLowStockProductDto>> GetLowStockProductsPagedAsync(int threshold = 20, int page = 1, int pageSize = 15);
 
         Task<List<ResultAbcAnalysisDto>> GetAbcAnalysisAsync();
         Task<List<ResultRiskMatrixDto>> GetRiskMatrixAsync();
@@ -28,10 +28,20 @@ namespace DapperDashboardProject.Services.DashboardServices
         Task<List<ResultTopInventoryDto>> GetTopInventoryAsync();
         Task<List<ResultAnomalyDto>> GetAnomaliesAsync();
 
-        //TAblo metodu
+        // Table Method (Paginated)
+        Task<ResultProductTablePagedDto> GetProductsForTableAsync(string search, string category, string status, decimal? minPrice, decimal? maxPrice, int page = 1, int pageSize = 10);
 
-        Task<List<ResultProductTableDto>> GetProductsForTableAsync(string search, string category, string status);
+        // Filter Helpers
+        Task<List<string>> GetCategoryNamesAsync();
 
-        //Task<DashboardViewModel> GetFullDashboardAsync();
+        // Advanced Analytics
+        Task<List<ResultCategoryTrendDto>> GetCategoryTrendAnalysisAsync();
+        Task<List<ResultPriceHeatmapDto>> GetPriceStockHeatmapAsync();
+        Task<List<ResultCategoryScorecardDto>> GetCategoryScorecardAsync();
+
+        // Görev 3: Sayfalı trend ve scorecard
+        Task<PagedResult<ResultCategoryTrendDto>> GetCategoryTrendAnalysisPagedAsync(int page = 1, int pageSize = 10);
+        Task<PagedResult<ResultCategoryScorecardDto>> GetCategoryScorecardPagedAsync(int page = 1, int pageSize = 10);
     }
 }
+

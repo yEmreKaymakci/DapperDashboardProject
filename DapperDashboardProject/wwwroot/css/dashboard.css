@@ -1,65 +1,82 @@
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #0d1117;
-    color: #dae3ee;
+/* ═══════════════════════════════════════════════════
+   Dashboard.css — Yalnızca Dashboard/Index'e özgü stiller
+   Paylaşılan stiller shared.css'e taşındı
+   ═══════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════
+   Accordion — Kategori Sağlık Performansı
+   ═══════════════════════════════════════════════════ */
+.accordion-wrapper {
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: max-height;
 }
 
-.material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    vertical-align: middle;
-}
-/* Custom scrollbar for technical look */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+.accordion-wrapper.collapsed {
+    max-height: 280px;
 }
 
-::-webkit-scrollbar-track {
-    background: #0d1117;
+.accordion-wrapper.expanded {
+    max-height: 3000px;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #30363d;
-    border-radius: 10px;
+/* Fade-out gradient overlay when collapsed */
+.accordion-fade {
+    position: relative;
 }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: #414752;
-    }
+.accordion-fade.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, rgba(22, 27, 34, 0), rgba(22, 27, 34, 1));
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
 
-.glass-card {
-    background: #161b22;
+.accordion-fade.expanded::after {
+    opacity: 0;
+}
+
+.accordion-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 16px;
+    margin-top: 12px;
     border: 1px solid #30363d;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    background: rgba(88, 166, 255, 0.05);
+    color: #58a6ff;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-    .glass-card:hover {
-        border-color: #58a6ff;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 20px -5px rgba(0,0,0,0.5);
-    }
-
-.drawer-shadow {
-    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+.accordion-toggle-btn:hover {
+    background: rgba(88, 166, 255, 0.12);
+    border-color: #58a6ff;
+    transform: translateY(-1px);
 }
 
-.chart-container {
-    min-height: 300px;
+.accordion-toggle-btn .material-symbols-outlined {
+    font-size: 18px;
+    transition: transform 0.3s ease;
 }
 
-/* Shimmer loading effect */
-.shimmer {
-    background: linear-gradient(90deg, #161b22 25%, #1c2128 50%, #161b22 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+.accordion-toggle-btn.expanded .material-symbols-outlined {
+    transform: rotate(180deg);
 }
 
-@keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
+/* GPU acceleration for accordion */
+.accordion-wrapper {
+    will-change: transform;
 }

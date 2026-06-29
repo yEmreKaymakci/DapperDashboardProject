@@ -1,0 +1,117 @@
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "İleri İstatistikler";
+    ViewData["Subtitle"] = "Gelişmiş analiz ve karşılaştırma";
+}
+
+<div class="px-6 mt-8 space-y-8 max-w-[1600px] mx-auto">
+    <!-- Row 1: Category Trend + Scorecard -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Category Trend Analysis (Paginated) -->
+        <div class="glass-card rounded-xl">
+            <div class="p-6">
+                <h3 class="text-headline-sm font-bold text-on-surface mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-tertiary">trending_up</span>
+                    Kategori Trend Analizi
+                </h3>
+                <p class="text-body-sm text-on-surface-variant mb-6">Her kategorideki en pahalı ürünün ortalamadan sapma yüzdesi</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-outline-variant">
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase">Kategori</th>
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase">En Pahalı Ürün</th>
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase text-right">Fiyat</th>
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase text-right">Ort.</th>
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase text-right">Sapma %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trend-tbody">
+                            <tr><td colspan="5"><div class="loading-skeleton h-10 w-full m-4"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Görev 3: Pagination footer -->
+            <div id="trend-pagination"></div>
+        </div>
+
+        <!-- Category Scorecard (Paginated) -->
+        <div class="glass-card rounded-xl">
+            <div class="p-6">
+                <h3 class="text-headline-sm font-bold text-on-surface mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">score</span>
+                    Kategori Performans Kartı
+                </h3>
+                <p class="text-body-sm text-on-surface-variant mb-6">Değer ve aktiflik oranına göre ağırlıklı skor</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-outline-variant">
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase">Sıra</th>
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase">Kategori</th>
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase text-right">Değer Skoru</th>
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase text-right">Aktiflik Skoru</th>
+                                <th class="p-3 text-label-md text-on-surface-variant font-bold uppercase text-right">Genel Skor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scorecard-tbody">
+                            <tr><td colspan="5"><div class="loading-skeleton h-10 w-full m-4"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Görev 3: Pagination footer -->
+            <div id="scorecard-pagination"></div>
+        </div>
+    </div>
+
+    <!-- Row 2: Price-Stock Heatmap -->
+    <div class="glass-card p-6 rounded-xl">
+        <h3 class="text-headline-sm font-bold text-on-surface mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-warning">grid_on</span>
+            Fiyat-Stok Isı Haritası
+        </h3>
+        <p class="text-body-sm text-on-surface-variant mb-6">Fiyat aralığı ve stok seviyesine göre ürün dağılımı</p>
+        <div id="heatmap-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="loading-skeleton h-24 w-full rounded-xl"></div>
+            <div class="loading-skeleton h-24 w-full rounded-xl"></div>
+            <div class="loading-skeleton h-24 w-full rounded-xl"></div>
+        </div>
+    </div>
+
+    <!-- Row 3: Charts — Summary/Detail Pattern -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="glass-card p-6 rounded-xl expandable-card" onclick="openStatDetailModal('radar')">
+            <h3 class="text-label-md font-bold text-on-surface-variant uppercase mb-4">Kategori Performans Radarı</h3>
+            <div class="chart-container" id="stat-chart-radar"></div>
+            <div class="expand-hint"><span class="material-symbols-outlined" style="font-size:14px">open_in_full</span> Detay için tıklayın</div>
+        </div>
+        <div class="glass-card p-6 rounded-xl expandable-card" onclick="openStatDetailModal('deviation')">
+            <h3 class="text-label-md font-bold text-on-surface-variant uppercase mb-4">Fiyat Sapması Karşılaştırması</h3>
+            <div class="chart-container" id="stat-chart-deviation"></div>
+            <div class="expand-hint"><span class="material-symbols-outlined" style="font-size:14px">open_in_full</span> Detay için tıklayın</div>
+        </div>
+    </div>
+</div>
+
+<!-- Görev 3: Detail Modal for Statistics charts -->
+<div class="detail-modal-overlay" id="stat-detail-modal" onclick="if(event.target===this) closeStatDetailModal()">
+    <div class="detail-modal-panel">
+        <div class="detail-modal-header">
+            <h3 id="stat-modal-title"><span class="material-symbols-outlined text-primary">analytics</span> Detay Görünüm</h3>
+            <button class="detail-modal-close" onclick="closeStatDetailModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="detail-modal-body" id="stat-modal-body"></div>
+    </div>
+</div>
+
+@section Styles {
+    <link href="~/css/statistics.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/js/statistics.js"></script>
+}
