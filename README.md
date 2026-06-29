@@ -3,7 +3,7 @@
 [![.NET Version](https://img.shields.io/badge/.NET-9.0-blueviolet?style=for-the-badge&logo=dotnet)](https://dotnet.microsoft.com/)
 ![MicrosoftSQLServer](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white)
 [![ORM](https://img.shields.io/badge/Dapper-ORM-red?style=for-the-badge&logo=nuget)](https://github.com/DapperLib/Dapper)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+
 
 **Analitik Merkezi**, yaklaşık **1.025.000 veri kaydını (1+ Milyon satır)** gerçek zamanlı ve yüksek performansla işleyen, kurumsal düzeyde bir Ürün Analitiği ve Envanter Yönetimi platformudur. ASP.NET Core 9 MVC mimarisi üzerine inşa edilmiş olup, veri erişiminde Dapper ORM ve Microsoft SQL Server (MSSQL) veri tabanı entegrasyonuyla milisaniyeler seviyesinde sorgu yanıt süreleri sunar.
 
